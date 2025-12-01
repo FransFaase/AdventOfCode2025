@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <malloc.h>
-#include <string.h>
-
 // *** includes ***
 
 #line 6 "Std.md"
@@ -64,7 +60,7 @@ int num_t_sign(num_t a);
 char *copy_str(char *s);
 #line 9 "Day01.md"
 void solve1();
-#line 76 "Day01.md"
+#line 79 "Day01.md"
 void solve2();
 
 // *** functions ***
@@ -197,7 +193,7 @@ void solve1()
             count++;}
 
     printf("%d\n", count);}
-#line 76 "Day01.md"
+#line 79 "Day01.md"
 void solve2()
 {
     num_t pos =50 ;
@@ -216,7 +212,7 @@ void solve2()
                 {
                     pos = 0;
                     count++;}}}
-#line 97 "Day01.md"
+#line 100 "Day01.md"
         else{
 
             for( int j =0;  j < clicks; j++)
@@ -226,7 +222,7 @@ void solve2()
                     count++;
                 if( pos < 0)
                     pos += 100;}}}
-#line 109 "Day01.md"
+#line 112 "Day01.md"
     printf("%d\n", count);}
 
 // *** others ***
