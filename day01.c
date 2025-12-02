@@ -1,14 +1,20 @@
+// This is generated with MarkDownC 0.1 of December 1, 2025.
+// from the files:
+// - Std.md
+// - Day01.md
+
 // *** includes ***
 
 #line 6 "Std.md"
-#include "stdio.h"
-#include "stdlib.h"
-#include "malloc.h"
-#include "unistd.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <unistd.h>
+#include <string.h>
 
 // *** defines ***
 
-#line 16 "Std.md"
+#line 17 "Std.md"
 #define FALSE 0
 #define TRUE 1
 
@@ -17,10 +23,10 @@
 
 // *** typedefs ***
 
-#line 14 "Std.md"
+#line 15 "Std.md"
 typedef long long num_t;
 typedef int bool;
-#line 24 "Std.md"
+#line 25 "Std.md"
 typedef char *char_p;
 
 // *** struct declarations ***
@@ -39,24 +45,24 @@ bool use_sample =FALSE ;
 
 
 void read_input(const char *day);
-#line 76 "Std.md"
+#line 77 "Std.md"
 char dd(int i, int j);
 
 
 void pre();
-#line 83 "Std.md"
+#line 84 "Std.md"
 int main(int argc, char *argv[]);
-#line 106 "Std.md"
+#line 107 "Std.md"
 bool is_digit(char c);
 
 num_t parse_number(char **s);
-#line 127 "Std.md"
+#line 128 "Std.md"
 num_t gcd(num_t a, num_t b);
-#line 138 "Std.md"
+#line 139 "Std.md"
 num_t scm(num_t a, num_t b);
 num_t num_t_abs(num_t a);
 int num_t_sign(num_t a);
-#line 147 "Std.md"
+#line 148 "Std.md"
 char *copy_str(char *s);
 #line 9 "Day01.md"
 void solve1();
@@ -66,7 +72,7 @@ void solve2();
 // *** functions ***
 
 
-#line 31 "Std.md"
+#line 32 "Std.md"
 void read_input(const char *day)
 {
     n = 0;
@@ -104,7 +110,7 @@ void read_input(const char *day)
                 *s = '\0';
                else
                    j++
-#line 66 "Std.md"
+#line 67 "Std.md"
                ;
 
             s++;}
@@ -112,7 +118,7 @@ void read_input(const char *day)
         if( j > m)
             m = j;
         *s++ = '\0';}}
-#line 76 "Std.md"
+#line 77 "Std.md"
 char dd(int i, int j) { return i >= 0 && i < n && j >= 0 && j < m ? d[i][j]:  ' ';}
 
 
@@ -135,7 +141,7 @@ int main(int argc, char *argv[])
 
     solve1();
     solve2();}
-#line 106 "Std.md"
+#line 107 "Std.md"
 bool is_digit(char c) { return '0' <= c && c <= '9';}
 
 num_t parse_number(char **s)
@@ -150,7 +156,7 @@ num_t parse_number(char **s)
     for(; is_digit(**s); (*s)++)
         value = 10 * value + **s - '0';
     return sign * value;}
-#line 127 "Std.md"
+#line 128 "Std.md"
 num_t gcd(num_t a, num_t b)
 {
     while( a != 0)
@@ -165,7 +171,7 @@ num_t gcd(num_t a, num_t b)
 num_t scm(num_t a, num_t b) { return a * (b / gcd(a, b));}
 num_t num_t_abs(num_t a) { return a < 0 ? -a:  a;}
 int num_t_sign(num_t a) { return a < 0 ? -1:  a > 0 ? 1:  0;}
-#line 147 "Std.md"
+#line 148 "Std.md"
 char *copy_str(char *s)
 {
     char *r =( char*)malloc(strlen(s) + 1);

@@ -1,11 +1,16 @@
+// This is generated with MarkDownC 0.1 of December 1, 2025.
+// from the files:
+// - Std.md
+// - Day02.md
+
 // *** includes ***
 
 #line 6 "Std.md"
-#include "stdio.h"
-#include "stdlib.h"
-#include "malloc.h"
-#include "unistd.h"
-#include "string.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <unistd.h>
+#include <string.h>
 
 // *** defines ***
 
