@@ -7,6 +7,7 @@ First some standard includes:
 #include <stdlib.h>
 #include <malloc.h>
 #include <unistd.h>
+#include <string.h>
 ```
 
 Some standard type definitions:
