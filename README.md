@@ -33,6 +33,15 @@ with the brute force string method, which I used for the second part.
 
 See further [Day 2](Day02.md) and [day02.c](day02.c).
 
+### Wednesday, December 3, 2025
+
+I started at 6:00 and found the answers to both puzzles without many problems,
+except for some small bug related to incorrect or missing variables. Then I
+also spend some time finding a non-recursive, much more efficient solution for
+the second part.
+
+See further [Day 3](Day03.md) and [day03.c](day03.c).
+
 ### Personal stats
 
 The columns 'Gold' and 'Silver' contain the numbers from the [Stats](https://adventofcode.com/2025/stats)
@@ -42,5 +51,6 @@ page after I finished both parts. This gives some idea of my global ranking.
 Day   -Part 1-   -Part 2-   -Gold-  -Silver-
   1   00:09:36   00:17:35      869      2484
   2   01:14:05   01:44:30     8344      2698  
+  3   00:13:16   00:29:01     2371      3649
 ```
  
