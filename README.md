@@ -42,6 +42,14 @@ the second part.
 
 See further [Day 3](Day03.md) and [day03.c](day03.c).
 
+### Thursday, December 4, 2025
+
+I started at 6:00 and finished both puzzles at 6:10:33. With the first puzzle,
+I made one mistake: I first implemented 'four or less' instead of 'less than four'.
+For the second part, I had to fix two small typing errors.
+
+See further [Day 4](Day04.md) and [day04.c](day04.c).
+
 ### Personal stats
 
 The columns 'Gold' and 'Silver' contain the numbers from the [Stats](https://adventofcode.com/2025/stats)
@@ -50,7 +58,8 @@ page after I finished both parts. This gives some idea of my global ranking.
 ```
 Day   -Part 1-   -Part 2-   -Gold-  -Silver-
   1   00:09:36   00:17:35      869      2484
-  2   01:14:05   01:44:30     8344      2698  
+  2   01:14:05   01:44:30     8344      2698
   3   00:13:16   00:29:01     2371      3649
+  4   00:06:53   00:10:33      874      1069  
 ```
  
