@@ -50,6 +50,16 @@ For the second part, I had to fix two small typing errors.
 
 See further [Day 4](Day04.md) and [day04.c](day04.c).
 
+### Friday, December 5, 2025
+
+I started at 6:00 and finished both puzzles at 6:52:45. For the second part,
+I decided not to use the code that I had written during an earlier year for
+combining ranges, but to write some new code. After I found the answer for the
+second part, I spend less than 10 minutes to find the answer with the code
+I wrote earlier.
+
+See further [Day 5](Day05.md) and [day05.c](day05.c).
+
 ### Personal stats
 
 The columns 'Gold' and 'Silver' contain the numbers from the [Stats](https://adventofcode.com/2025/stats)
@@ -61,5 +71,6 @@ Day   -Part 1-   -Part 2-   -Gold-  -Silver-
   2   01:14:05   01:44:30     8344      2698
   3   00:13:16   00:29:01     2371      3649
   4   00:06:53   00:10:33      874      1069  
+  5   00:08:17   00:52:45     4903      3931
 ```
  
