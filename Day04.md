@@ -73,7 +73,7 @@ I run the bash file [`runOnSave.sh`](runOnSave.sh) with `04` as the argument,
 which everytime when I save this file, runs the above command and shows the
 result or the first compile errors, if there are any.
 
-The C file that is compiled is [day01.c](day01.c).
+The C file that is compiled is [day04.c](day04.c).
 
 
 

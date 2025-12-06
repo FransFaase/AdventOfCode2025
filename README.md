@@ -60,6 +60,16 @@ I wrote earlier.
 
 See further [Day 5](Day05.md) and [day05.c](day05.c).
 
+### Saturday, December 6, 2025
+
+I started at 6:00. This was not a very particular difficult puzzle with respect
+to the algorithm to use, nevertheless it took me quite some time, first not
+noticing a warning that was actual an error, making my decide to adapt my
+run script to report all warnings and treat them as errors. And with the second
+part, I struggled a bit to parse the digits in the correct direction.
+
+See further [Day 6](Day06.md) and [day06.c](day06.c).
+
 ### Personal stats
 
 The columns 'Gold' and 'Silver' contain the numbers from the [Stats](https://adventofcode.com/2025/stats)
@@ -72,5 +82,6 @@ Day   -Part 1-   -Part 2-   -Gold-  -Silver-
   3   00:13:16   00:29:01     2371      3649
   4   00:06:53   00:10:33      874      1069  
   5   00:08:17   00:52:45     4903      3931
+  6   00:28:07   00:42:29     2522      3988
 ```
  
