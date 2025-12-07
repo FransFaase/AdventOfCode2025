@@ -47,6 +47,11 @@ void read_input(const char *day)
     char *data = (char*)malloc(length);
     length = read(fh, data, length);
     fclose(f);
+    if (length == 0)
+    {
+        printf("File %s is empty\n", filename);
+        exit(1);
+    }
     
     // count the number of lines in the file
     for (int i = 0; i < length; i++)

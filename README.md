@@ -70,6 +70,14 @@ part, I struggled a bit to parse the digits in the correct direction.
 
 See further [Day 6](Day06.md) and [day06.c](day06.c).
 
+### Sunday, December 7, 2025
+
+I started a bit after 6:00. When solving the first part, I already got the
+idea what the second part was going to be and that idea was correct. Still
+took me some time to solve the second part, due to some mistakes.
+
+See further [Day 7](Day07.md) and [day07.c](day07.c).
+
 ### Personal stats
 
 The columns 'Gold' and 'Silver' contain the numbers from the [Stats](https://adventofcode.com/2025/stats)
@@ -83,5 +91,6 @@ Day   -Part 1-   -Part 2-   -Gold-  -Silver-
   4   00:06:53   00:10:33      874      1069  
   5   00:08:17   00:52:45     4903      3931
   6   00:28:07   00:42:29     2522      3988
+  7   00:17:28   00:34:48     2305      2486
 ```
  
