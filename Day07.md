@@ -297,6 +297,159 @@ bool use_sample = FALSE;
 
 At 6:34:48, I submitted the correct answer from the above code.
 
+### Extra
+
+I wondered if it would be possible to get an answer just one lower
+than the one found for the second part by adding/removing some of the
+`^` in the puzzle input. After some programming, it looked it was
+not that hard.
+
+```c
+int main(int argc, char *argv[])
+{
+	...
+	solve3();
+}
+
+num_t count = 0;
+
+void solve2()
+{
+	num_t beams[M];
+	for (int j = 0; j < m; j++)
+		beams[j] = 0;
+	
+	// Search for the S character;
+	for (int j = 0; j < m; j++)
+		if (d[0][j] == 'S')
+		{
+			beams[j] = 1;
+			break;
+		}
+	for (int i = 2; i < n; i += 2)
+	{
+		num_t next_beams[M];
+		for (int j = 0; j < m; j++)
+			next_beams[j] = 0;
+		for (int j = 0; j < m; j++)
+			if (beams[j] > 0)
+			{
+				if (d[i][j] == '^')
+				{
+					next_beams[j-1] += beams[j];
+					next_beams[j+1] += beams[j];
+				}
+				else
+					next_beams[j] += beams[j];
+			}
+		for (int j = 0; j < m; j++)
+			beams[j] = next_beams[j];
+	}
+	for (int j = 0; j < m; j++)
+		count += beams[j];
+	printf("%lld\n", count);
+}
+
+void solve3()
+{
+	int nr_changed = 1;
+	num_t smallest_diff = -1;
+	num_t largest_diff = 0;
+	num_t nr_the_same = 0;
+	num_t nr_one_less = 0;
+	for (int level = 1; level < 5; level++)
+	{
+		nr_changed += level + 1;
+		printf("%d\n", nr_changed);
+		int i1 = 140 - 2 * level;
+		int j1 = 3 + level;
+		//for (int i = 0; i <= level; i++)
+		//{
+		//	for (int j = 0; j <= i; j++)
+		//		printf("%c", d[i1 + 2 * i][j1 - i + 2*j]);
+		//	printf("\n");
+		//}
+		//printf("\n");
+		num_t max = 1 << nr_changed;
+		for (num_t l = 0; l < max; l++)
+		{
+			num_t k = 1;
+			for (int i = 0; i <= level; i++)
+				for (int j = 0; j <= i; j++)
+				{
+					d[i1 + 2 * i][j1 - i + 2*j] = (k & l) == 0 ? '.' : '^';
+					k *= 2;
+				}
+			
+			num_t beams[M];
+			for (int j = 0; j < m; j++)
+				beams[j] = 0;
+			
+			// Search for the S character;
+			for (int j = 0; j < m; j++)
+				if (d[0][j] == 'S')
+				{
+					beams[j] = 1;
+					break;
+				}
+			for (int i = 2; i < n; i += 2)
+			{
+				num_t next_beams[M];
+				for (int j = 0; j < m; j++)
+					next_beams[j] = 0;
+				for (int j = 0; j < m; j++)
+					if (beams[j] > 0)
+					{
+						if (d[i][j] == '^')
+						{
+							next_beams[j-1] += beams[j];
+							next_beams[j+1] += beams[j];
+						}
+						else
+							next_beams[j] += beams[j];
+					}
+				for (int j = 0; j < m; j++)
+					beams[j] = next_beams[j];
+			}
+			num_t count2 = 0;
+			for (int j = 0; j < m; j++)
+				count2 += beams[j];
+			num_t diff = count2 < count ? count - count2 : count2 - count;
+			if (diff == 0)
+				nr_the_same++;
+			else if (smallest_diff == -1 || diff < smallest_diff)
+			{
+				smallest_diff = diff;
+				printf("diff: %lld %lld\n", smallest_diff, count2);
+			}
+			if (diff > largest_diff && diff > smallest_diff)
+			{
+				largest_diff = diff;
+				printf("diff: %lld %lld\n", largest_diff, count2);
+			}				
+			if (count2 + 1 == count)
+			{
+				nr_one_less++;
+				printf("found %lld for: ", count2);
+				num_t k = 1;
+				for (int i = 0; i <= level; i++)
+				{
+					if (i > 0) printf("|");
+					for (int j = 0; j <= i; j++)
+					{
+						printf("%c", (k & l) == 0 ? '.' : '^');
+						k *= 2;
+					}
+				}
+				printf("\n");
+			}
+		}
+		printf("nr the same: %lld\n", nr_the_same);
+		printf("nr one less: %lld\n", nr_one_less);
+	}
+}
+
+```
 ### Executing this page
 
 The command to process this markdown file, is:
