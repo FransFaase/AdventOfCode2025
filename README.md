@@ -78,6 +78,17 @@ took me some time to solve the second part, due to some mistakes.
 
 See further [Day 7](Day07.md) and [day07.c](day07.c).
 
+### Monday, December 8, 2025
+
+I started a bit after 6:00. This was the first puzzle where I needed to define
+some data structures and write some 'serious' algorithms (including using `qsort`)
+to find the answers. The second part was relatively easy if you got the first
+part right, which I did in one try after making several increments to verify
+that I had not made any mistakes.
+
+See further [Day 8](Day08.md) and [day08.c](day08.c).
+
+
 ### Personal stats
 
 The columns 'Gold' and 'Silver' contain the numbers from the [Stats](https://adventofcode.com/2025/stats)
@@ -92,5 +103,6 @@ Day   -Part 1-   -Part 2-   -Gold-  -Silver-
   5   00:08:17   00:52:45     4903      3931
   6   00:28:07   00:42:29     2522      3988
   7   00:17:28   00:34:48     2305      2486
+  8   00:50:24   00:56:07     2737       599
 ```
  
