@@ -88,6 +88,18 @@ that I had not made any mistakes.
 
 See further [Day 8](Day08.md) and [day08.c](day08.c).
 
+### Tuesday, December 9, 2025
+
+I started at 6:00. I copied some code from yesterday, but did change the
+names and used typedefs. After fixing some syntax errors, the program did
+return the correct answer for the first part. The second part was a bit more
+difficult. After some thinking, I decided to implement a function that checks
+if a point is inside or on the border (assuming that the border is not self
+intersecting). The initial version returned the correct answer for the example
+input after correcting a small mistake discovered after adding debug print statements.
+As anticipated it ran quite slow on my puzzle input, but after I realized it
+was enough to test the border only, it returned the correct answer after a little
+more than 2 minutes running.
 
 ### Personal stats
 
@@ -104,5 +116,6 @@ Day   -Part 1-   -Part 2-   -Gold-  -Silver-
   6   00:28:07   00:42:29     2522      3988
   7   00:17:28   00:34:48     2305      2486
   8   00:50:24   00:56:07     2737       599
+  9   00:20:37   02:04:15     2638      8733  
 ```
  
