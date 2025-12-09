@@ -101,6 +101,12 @@ As anticipated it ran quite slow on my puzzle input, but after I realized it
 was enough to test the border only, it returned the correct answer after a little
 more than 2 minutes running.
 
+After reading [Day 9 solution on reddit](https://www.reddit.com/r/adventofcode/comments/1phywvn/2025_day_9_solutions/),
+I realized that maybe it is enough to test if there are no red tiles inside the
+area between two points, but that was not the case, as you also have to check
+lines that cross the area. That did return the correct answer with a total
+runtime of 0.036 seconds.
+
 ### Personal stats
 
 The columns 'Gold' and 'Silver' contain the numbers from the [Stats](https://adventofcode.com/2025/stats)

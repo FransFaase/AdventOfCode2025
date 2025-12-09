@@ -88,7 +88,7 @@ void solve1();
 int compare_area(const void *a, const void *b);
 #line 349 "Day09.md"
 bool inside(num_t x, num_t y);
-#line 512 "Day09.md"
+#line 638 "Day09.md"
 void solve2();
 
 // *** functions ***
@@ -286,7 +286,7 @@ bool inside(num_t x, num_t y)
                         inside_score++;}}}}
 #line 402 "Day09.md"
     return inside_score > 0;}
-#line 512 "Day09.md"
+#line 638 "Day09.md"
 void solve2()
 {
     int nr_areas = n * (n - 1)/  2;
@@ -298,24 +298,36 @@ void solve2()
         int t2 = areas[a].redtile2;
         num_t x2 = redtiles[t2].x;
         num_t y2 = redtiles[t2].y;
-        printf("Testing area %d %d %lld from %lld,%lld to %lld, %lld:\n", 
-               t1, t2, areas[a].area, x1, y1, x2, y2)
-#line 523 "Day09.md"
-        ;
-
-
-        if( inside(x1, y2) && inside(x2, y1))
+        if( x1 > x2) { num_t h =x1 ; x1 = x2; x2 = h;}
+        if( y1 > y2) { num_t h =y1 ; y1 = y2; y2 = h;}
+        bool go =TRUE ;
+        for( int i =0;  i < n && go; i++)
+            if(    x1 < redtiles[i].x && redtiles[i].x < x2
+                && y1 < redtiles[i].y && redtiles[i].y < y2)
+                go = FALSE;
+        for( int i1 =0;  i1 < n && go; i1++)
         {
-            if( x1 > x2) { num_t h =x1 ; x1 = x2; x2 = h;}
-            if( y1 > y2) { num_t h =y1 ; y1 = y2; y2 = h;}
-            bool go =TRUE ;
-            for( int x =x1;  x <= x2 && go; x++)
-                go = inside(x, y1) && inside(x, y2);
-            for( int y =y1;  y <= y2 && go; y++)
-                go = inside(x1, y) && inside(x2, y);
-            if( go)
+            int i2 = (i1 + 1)%  n;
+            num_t xl1 = redtiles[i1].x;
+            num_t yl1 = redtiles[i1].y;
+            num_t xl2 = redtiles[i2].x;
+            num_t yl2 = redtiles[i2].y;
+            if( yl1 > yl2) { num_t h =yl1 ; yl1 = yl2; yl2 = h;}
+            if( xl1 > xl2) { num_t h =xl1 ; xl1 = xl2; xl2 = h;}
+            if( xl1 == xl2 && x1 < xl1 && xl1 < x2)
             {
-                printf("%lld\n", areas[a].area);
-                return;}}}}
+                if( yl1 <= y1 && y2 <= yl2)
+                    go = FALSE;}
+
+            if( yl1 == yl2 && y1 < yl1 && yl1 < y2)
+            {
+                if( xl1 <= x1 && x2 <= xl2)
+                    go = FALSE;}}
+
+
+        if( go)
+        {
+            printf("%lld\n", areas[a].area);
+            return;}}}
 
 // *** others ***

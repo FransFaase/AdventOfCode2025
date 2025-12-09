@@ -545,6 +545,146 @@ At 8:02, okay, that runs a bit faster, but still rather slow.
 
 At 8:04:15, I submitted the correct answer from the above code, which took about 121 second the print the solution. 
 
+### After thoughs
+
+After reading [Day 9 solution on reddit](https://www.reddit.com/r/adventofcode/comments/1phywvn/2025_day_9_solutions/),
+I realized that maybe it is enough to test if there are no red tiles inside the
+area between two points.
+
+```c
+void solve2()
+{
+	int nr_areas = n * (n - 1) / 2;
+	for (int a = 0; a < nr_areas; a++)
+	{
+		int t1 = areas[a].redtile1;
+		num_t x1 = redtiles[t1].x;
+		num_t y1 = redtiles[t1].y; 
+		int t2 = areas[a].redtile2;
+		num_t x2 = redtiles[t2].x;
+		num_t y2 = redtiles[t2].y;
+		if (x1 > x2) { num_t h = x1; x1 = x2; x2 = h; } 
+		if (y1 > y2) { num_t h = y1; y1 = y2; y2 = h; }
+		bool go = TRUE;
+		for (int i = 0; i < n; i++)
+			if (   x1 < redtiles[i].x && redtiles[i].x < x2
+				&& y1 < redtiles[i].y && redtiles[i].y < y2)
+			{
+				go = FALSE;
+				break;
+			}
+		if (go)
+		{
+			printf("%lld\n", areas[a].area);
+			return;
+		}
+	}
+}
+```
+
+No, that is not enough. You also have to test that no line crosses the area.
+
+```c
+void solve2()
+{
+	int nr_areas = n * (n - 1) / 2;
+	for (int a = 0; a < nr_areas; a++)
+	{
+		int t1 = areas[a].redtile1;
+		num_t x1 = redtiles[t1].x;
+		num_t y1 = redtiles[t1].y; 
+		int t2 = areas[a].redtile2;
+		num_t x2 = redtiles[t2].x;
+		num_t y2 = redtiles[t2].y;
+		if (x1 > x2) { num_t h = x1; x1 = x2; x2 = h; } 
+		if (y1 > y2) { num_t h = y1; y1 = y2; y2 = h; }
+		bool go = TRUE;
+		for (int i = 0; i < n && go; i++)
+			if (   x1 < redtiles[i].x && redtiles[i].x < x2
+				&& y1 < redtiles[i].y && redtiles[i].y < y2)
+				go = FALSE;
+		for (int i1 = 0; i1 < n && go; i1++)
+		{
+			int i2 = (i1 + 1) % n;
+			num_t xl1 = redtiles[i1].x;
+			num_t yl1 = redtiles[i1].y; 
+			num_t xl2 = redtiles[i2].x;
+			num_t yl2 = redtiles[i2].y;
+			if (xl1 == xl2)
+			{
+				if (yl1 > yl2) { num_t h = yl1; yl1 = yl2; yl2 = h; }
+				if (yl1 <= y1 && y2 <= yl2)
+					go = FALSE;
+			}
+			if (yl1 == yl2)
+			{		
+				if (xl1 > xl2) { num_t h = xl1; xl1 = xl2; xl2 = h; } 
+				if (xl1 <= x1 && x2 <= xl2)
+					go = FALSE;
+			}
+		}
+		if (go)
+		{
+			printf("%lld\n", areas[a].area);
+			return;
+		}
+	}
+}
+```
+
+That too did not return the correct answer.
+
+```c
+void solve2()
+{
+	int nr_areas = n * (n - 1) / 2;
+	for (int a = 0; a < nr_areas; a++)
+	{
+		int t1 = areas[a].redtile1;
+		num_t x1 = redtiles[t1].x;
+		num_t y1 = redtiles[t1].y; 
+		int t2 = areas[a].redtile2;
+		num_t x2 = redtiles[t2].x;
+		num_t y2 = redtiles[t2].y;
+		if (x1 > x2) { num_t h = x1; x1 = x2; x2 = h; } 
+		if (y1 > y2) { num_t h = y1; y1 = y2; y2 = h; }
+		bool go = TRUE;
+		for (int i = 0; i < n && go; i++)
+			if (   x1 < redtiles[i].x && redtiles[i].x < x2
+				&& y1 < redtiles[i].y && redtiles[i].y < y2)
+				go = FALSE;
+		for (int i1 = 0; i1 < n && go; i1++)
+		{
+			int i2 = (i1 + 1) % n;
+			num_t xl1 = redtiles[i1].x;
+			num_t yl1 = redtiles[i1].y; 
+			num_t xl2 = redtiles[i2].x;
+			num_t yl2 = redtiles[i2].y;
+			if (yl1 > yl2) { num_t h = yl1; yl1 = yl2; yl2 = h; }
+			if (xl1 > xl2) { num_t h = xl1; xl1 = xl2; xl2 = h; } 
+			if (xl1 == xl2 && x1 < xl1 && xl1 < x2)
+			{
+				if (yl1 <= y1 && y2 <= yl2)
+					go = FALSE;
+			}
+			if (yl1 == yl2 && y1 < yl1 && yl1 < y2)
+			{		
+				if (xl1 <= x1 && x2 <= xl2)
+					go = FALSE;
+			}
+		}
+		if (go)
+		{
+			printf("%lld\n", areas[a].area);
+			return;
+		}
+	}
+}
+```
+
+At 8:46, that did return the correct answer with a total runtime for both parts of 0.038 seconds.
+
+
 ### Executing this page
 
 The command to process this markdown file, is:
