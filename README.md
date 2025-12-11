@@ -107,6 +107,24 @@ area between two points, but that was not the case, as you also have to check
 lines that cross the area. That did return the correct answer with a total
 runtime of 0.036 seconds.
 
+See further [Day 9](Day09.md) and [day09.c](day09.c).
+
+### Wednesday, December 10, 2025
+
+I started around 6:00. I found the answer to the first part at 6:21:57 and
+spend most of the rest of the day working on the second part, not being able
+to implement an efficient algorithm. I tried several approaches, but non got
+past machine 91 in my input.
+
+See further [Day 10](Day10.md) and [day10.c](day10.c).
+
+### Thursday, December 11, 2025
+
+I started at 6:02 and solved both parts without much problems except for the
+usual syntax errors and small bugs (maybe due to have had too less sleep).
+
+See further [Day 11](Day11.md) and [day11.c](day11.c).
+
 ### Personal stats
 
 The columns 'Gold' and 'Silver' contain the numbers from the [Stats](https://adventofcode.com/2025/stats)
@@ -117,11 +135,13 @@ Day   -Part 1-   -Part 2-   -Gold-  -Silver-
   1   00:09:36   00:17:35      869      2484
   2   01:14:05   01:44:30     8344      2698
   3   00:13:16   00:29:01     2371      3649
-  4   00:06:53   00:10:33      874      1069  
+  4   00:06:53   00:10:33      874      1069
   5   00:08:17   00:52:45     4903      3931
   6   00:28:07   00:42:29     2522      3988
   7   00:17:28   00:34:48     2305      2486
   8   00:50:24   00:56:07     2737       599
-  9   00:20:37   02:04:15     2638      8733  
+  9   00:20:37   02:04:15     2638      8733
+ 10   00:21:57          -
+ 11   00:36:31   00:49:03     2143      2503
 ```
  
