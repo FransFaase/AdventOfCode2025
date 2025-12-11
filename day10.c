@@ -53,6 +53,10 @@ num_t max_per_button[100];
 bool proc_buttons[100];
 
 int depth;
+#line 1529 "Day10.md"
+num_t matrix[50][50];
+int reduced_on_pos[50];
+num_t button_presses[50];
 
 // *** function forward declarations ***
 
@@ -82,10 +86,12 @@ char *copy_str(char *s);
 void solve1();
 #line 933 "Day10.md"
 void search_min(int jolts, int cur_p, int b, int mult);
-#line 1309 "Day10.md"
+#line 1696 "Day10.md"
 void solve2();
 #line 1184 "Day10.md"
 void search_min_b(int jolts);
+#line 1793 "Day10.md"
+void solve_equations(int jolt, int button);
 
 // *** functions ***
 
@@ -350,43 +356,32 @@ void search_min(int jolts, int cur_p, int b, int mult)
     {
         for( int b =0;  b < nr_buttons; b++)
             max_per_button[b] = old_max_per_button[b];}}
-#line 1309 "Day10.md"
+#line 1696 "Day10.md"
 void solve2()
 {
     num_t count =0 ;
     for( int i =0;  i < n; i++)
     {
-        printf("%d\n", i);
         char *s = d[i];
         while( *s != '(')
             s++;
         nr_pos = (s - d[i]) - 3;
-        num_t nr_pos_per_button[100];
+
         nr_buttons = 0;
         while( *s == '(')
         {
+            for( int p =0;  p < nr_pos; p++)
+                matrix[p][nr_buttons] = 0;
             s++;
             buttons[nr_buttons] = 0;
-            int nr_pos =0 ;
             for(;;)
             {
                 num_t num = parse_number(&s);
-                buttons[nr_buttons] |= 1 << num;
-                nr_pos++;
+                matrix[num][nr_buttons] = 1;
                 if( *s++ == ')')
                     break;}
 
             s++;
-            nr_pos_per_button[nr_buttons] = nr_pos;
-            for( int i =nr_buttons;  i > 0 && nr_pos_per_button[i-1] < nr_pos_per_button[i]; i--)
-            {
-                int nr = nr_pos_per_button[i-1];
-                nr_pos_per_button[i-1] = nr_pos_per_button[i];
-                nr_pos_per_button[i] = nr;
-                num_t value = buttons[i-1];
-                buttons[i-1] = buttons[i];
-                buttons[i] = value;}
-
             nr_buttons++;}
 
         for( int j =0;  *s != '}'; j++)
@@ -394,11 +389,73 @@ void solve2()
             s++;
             jolting[j] = parse_number(&s);}
 
-        min = 1000;
+
+        for( int p =0;  p < nr_pos; p++)
+        {
+            for( int b =0;  b < nr_buttons; b++)
+                if( matrix[p][b] == 0)
+                    printf("    ");
+                else
+                    printf("%4lld", matrix[p][b])
+#line 1734 "Day10.md"
+                ;
+
+            printf(" = %lld\n", jolting[p]);}
+
+        printf("\n");
+
+
+        bool reduced_rows[50];
+        for( int p =0;  p < nr_pos; p++)
+            reduced_rows[p] = FALSE;
+
         for( int b =0;  b < nr_buttons; b++)
-            proc_buttons[b] = FALSE;
-        search_min_b(0);
-        printf(" = %d\n", min);
+        {
+
+            int p =0 ;
+            for( p = 0; p < nr_pos; p++)
+                if( !reduced_rows[p] && matrix[p][b] != 0)
+                    break;
+            if( p < nr_pos)
+            {
+                reduced_on_pos[b] = p;
+                reduced_rows[p] = TRUE;
+
+                num_t factor = matrix[p][b];
+                printf("%d: %lld\n", p, factor);
+
+                for( int o_p =0;  o_p < nr_pos; o_p++)
+                    if( !reduced_rows[o_p] && matrix[o_p][b] != 0)
+                    {
+                        num_t o_factor = matrix[o_p][b];
+                        matrix[o_p][b] = 0;
+                        for( int b2 = b+  1; b2 < nr_buttons; b2++)
+                            matrix[o_p][b2] = factor * matrix[o_p][b2] - o_factor * matrix[p][b2];
+                        jolting[o_p] = factor * jolting[o_p] - o_factor * jolting[p];}
+#line 1771 "Day10.md"
+                for( int p =0;  p < nr_pos; p++)
+                {
+                    for( int b =0;  b < nr_buttons; b++)
+                        if( matrix[p][b] == 0)
+                            printf("    ");
+                        else
+                            printf("%4lld", matrix[p][b])
+#line 1776 "Day10.md"
+                        ;
+
+                    printf(" = %lld\n", jolting[p]);}
+
+                printf("\n");}
+
+            else
+                reduced_on_pos[b] = -1
+#line 1782 "Day10.md"
+            ;}
+
+
+        min = 1000;
+        solve_equations(0, nr_buttons - 1);
+        printf("min = %d\n", min);
         count += min;}
 
     printf("%lld\n", count);}
@@ -507,5 +564,61 @@ void search_min_b(int jolts)
 #line 1305 "Day10.md"
     depth--;
     proc_buttons[sel_b] = FALSE;}
+#line 1793 "Day10.md"
+void solve_equations(int jolt, int button)
+{
+    if( button < 0)
+    {
+        if( jolt < min)
+        {
+            min = jolt;}
+
+        return;}
+
+    if( jolt >= min)
+        return;
+
+    int pos = reduced_on_pos[button];
+    if( pos >= 0)
+    {
+        num_t value = jolting[pos];
+        for( int b = button+  1; b < nr_buttons; b++)
+            value -= matrix[pos][b] * button_presses[b];
+        num_t factor = matrix[pos][button];
+
+        if( factor < 0)
+        {
+            factor = -factor;
+            value = -value;}
+
+        if( value < 0)
+            return;
+        if( factor > 1)
+        {
+            if( value % factor != 0)
+                return;
+            value /= factor;}
+
+        jolt += value;
+        if( jolt < min)
+        {
+            button_presses[button] = value;
+
+            depth++;
+            solve_equations(jolt, button - 1);
+            depth--;}}
+
+
+    else{
+
+        button_presses[button] = 0;
+        while( jolt < min)
+        {
+
+            depth++;
+            solve_equations(jolt, button - 1);
+            depth--;
+            button_presses[button]++;
+            jolt++;}}}
 
 // *** others ***

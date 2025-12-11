@@ -1362,27 +1362,499 @@ void solve2()
 
 At 21:39, it appears to be still as slow as before.
 
+I let it run the whole night and it did not make much progress. I already
+figured out, you should do something with solving the equations. Now lets
+look at some example and see how we can figure out how to solve it.
 
 ```
- 0 1 2 3 4 5 6 7 8 9
-
-(  1,2,3,4,    7,  9) = 6 
-(0,          6      ) 
-(  1,2,3,4,5,6,  8,9) 
-(0,1,2,  4,5,6,7,8  ) 
-(0,1,2,  4,    7    ) 
-(  1,  3,4,5,6,7,8,9) 
-(0,1,2,3,4,6,  7,  9) 
-(    2,3,4,5,6,7    ) 
-(0,        5,6,7,  9) 
-(0,  2,3,4,5,6,7,8  ) 
-(  1,          7    ) 
-(  1,2,3,    6,7,8,9) 
-(    2,3,      7,8  )
- 6 8 9
-
-{73,231,221,196,225,191,212,127,168,195}
+     1     1  1     1     1  1             73
+  1     1  1  1  1  1           1  1      231
+  1     1  1  1     1  1     1     1  1   221
+  1     1        1  1  1     1            196
+  1     1  1  1  1  1  1     1            225
+        1  1     1  1  1  1  1            191
+     1  1  1     1     1  1  1     1      212
+  1        1  1  1  1  1  1  1  1  1  1   127
+        1  1     1           1     1  1   168
+  1     1        1  1     1        1      195
 ```
+
+Now, lets substract the second line from all other lines that have a 1
+in the first column
+
+```
+     1     1  1     1     1  1             73
+  1     1  1  1  1  1           1  1      231
+                -1     1     1 -1     1   221-231
+          -1 -1        1     1 -1 -1      196-231
+                       1     1 -1 -1      225-231
+        1  1     1  1  1  1  1            191
+     1  1  1     1     1  1  1     1      212
+       -1              1  1  1        1   127-231
+        1  1     1           1     1  1   168
+          -1 -1           1    -1         195-231
+```
+
+Now, lets repeat this process for some columns:
+
+```
+     1     1  1     1     1  1             73
+  1     1  1  1  1  1           1  1      231
+                -1     1     1 -1     1   221-231
+          -1 -1        1     1 -1 -1      196-231
+                       1     1 -1 -1      225-231
+        1  1     1  1  1  1  1            191
+                       1  2 -2  1     2   212-73+191-196+231-2*168
+             -1  1  1  3  2  3 -1 -1  1   127-231+191+(196-231)
+                   -1 -1 -1        1  1   168-191
+                          3 -3  1  1  2   195-231-106+231+212-73+191-196+231-2*168
+```
+
+In the end this will return in some equations with some
+free variables.
+
+At 11:46 (on Thursday December 11), lets write some code to reproduce this:
+
+```c
+void solve2()
+{
+	//num_t count = 0;
+	for (int i = 91; i < 92; i++)
+	{
+		char *s = d[i];
+		while (*s != '(')
+			s++;
+		nr_pos = (s - d[i]) - 3;
+
+		nr_buttons = 0;
+		num_t matrix[50][50];
+		while (*s == '(')
+		{
+			for (int p = 0; p < nr_pos; p++)
+				matrix[p][nr_buttons] = 0;
+			s++;
+			buttons[nr_buttons] = 0;
+			for (;;)
+			{
+				num_t num = parse_number(&s);
+				matrix[num][nr_buttons] = 1;
+				if (*s++ == ')')
+					break;
+			}
+			s++;
+			nr_buttons++;
+		}
+		for (int j = 0; *s != '}'; j++)
+		{
+			s++;
+			jolting[j] = parse_number(&s);
+		}
+		
+		for (int p = 0; p < nr_pos; p++)
+		{
+			for (int b = 0; b < nr_buttons; b++)
+				if (matrix[p][b] == 0)
+					printf("    ");
+				else
+					printf("%4lld", matrix[p][b]);
+			printf(" = %lld\n", jolting[p]);
+		}
+		printf("\n");
+		
+		// reduce:
+		bool reduced_rows[50];
+		for (int p = 0; p < nr_pos; p++)
+			reduced_rows[p] = FALSE;
+		
+		for (int b = 0; b < nr_buttons; b++)
+		{
+			// find row
+			int p = 0;
+			for (p = 0; p < nr_pos; p++)
+				if (!reduced_rows[p] && matrix[p][b] != 0)
+					break;
+			if (p < nr_pos)
+			{
+				reduced_rows[p] = TRUE;
+
+				num_t factor = matrix[p][b];
+				printf("%d: %lld\n", p, factor);
+				
+				for (int o_p = 0; o_p < nr_pos; o_p++)
+					if (!reduced_rows[o_p] && matrix[o_p][b] != 0)
+					{
+						num_t o_factor = matrix[o_p][b];
+						matrix[o_p][b] = 0;
+						for (int b2	= b + 1; b2 < nr_buttons; b2++)
+							matrix[o_p][b2] = factor * matrix[o_p][b2] - o_factor * matrix[p][b2];
+						jolting[o_p] = factor * jolting[o_p] - o_factor * jolting[p];
+					}
+				
+				
+				for (int p = 0; p < nr_pos; p++)
+				{
+					for (int b = 0; b < nr_buttons; b++)
+						if (matrix[p][b] == 0)
+							printf("    ");
+						else
+							printf("%4lld", matrix[p][b]);
+					printf(" = %lld\n", jolting[p]);
+				}
+				printf("\n");
+			}
+		}
+	}
+} 
+
+```
+
+Okay, that seems to work. It returned:
+
+```
+       1       1   1       1       1   1             = 73
+   1       1   1   1   1   1               1   1     = 231
+                      -1       1       1  -1       1 = -10
+              -1  -1           1       1  -1       1 = -35
+                               1       1  -1  -1     = -6
+           1   1       1       1   1   1             = 191
+                                   1   1           1 = 23
+                   1  -1      -3  -2  -3   1      -2 = -52
+                                       2  -1       2 = -6
+                                           3   2   2 = 66
+```
+
+I did take some break. At 20:08, I continued.
+
+```c
+num_t matrix[50][50];
+int reduced_on_pos[50];
+num_t button_presses[50];
+
+void solve2()
+{
+	//num_t count = 0;
+	for (int i = 91; i < 92; i++)
+	{
+		char *s = d[i];
+		while (*s != '(')
+			s++;
+		nr_pos = (s - d[i]) - 3;
+
+		nr_buttons = 0;
+		while (*s == '(')
+		{
+			for (int p = 0; p < nr_pos; p++)
+				matrix[p][nr_buttons] = 0;
+			s++;
+			buttons[nr_buttons] = 0;
+			for (;;)
+			{
+				num_t num = parse_number(&s);
+				matrix[num][nr_buttons] = 1;
+				if (*s++ == ')')
+					break;
+			}
+			s++;
+			nr_buttons++;
+		}
+		for (int j = 0; *s != '}'; j++)
+		{
+			s++;
+			jolting[j] = parse_number(&s);
+		}
+		
+		for (int p = 0; p < nr_pos; p++)
+		{
+			for (int b = 0; b < nr_buttons; b++)
+				if (matrix[p][b] == 0)
+					printf("    ");
+				else
+					printf("%4lld", matrix[p][b]);
+			printf(" = %lld\n", jolting[p]);
+		}
+		printf("\n");
+		
+		// reduce:
+		bool reduced_rows[50];
+		for (int p = 0; p < nr_pos; p++)
+			reduced_rows[p] = FALSE;
+		
+		for (int b = 0; b < nr_buttons; b++)
+		{
+			// find row
+			int p = 0;
+			for (p = 0; p < nr_pos; p++)
+				if (!reduced_rows[p] && matrix[p][b] != 0)
+					break;
+			if (p < nr_pos)
+			{
+				reduced_on_pos[b] = p;
+				reduced_rows[p] = TRUE;
+
+				num_t factor = matrix[p][b];
+				printf("%d: %lld\n", p, factor);
+				
+				for (int o_p = 0; o_p < nr_pos; o_p++)
+					if (!reduced_rows[o_p] && matrix[o_p][b] != 0)
+					{
+						num_t o_factor = matrix[o_p][b];
+						matrix[o_p][b] = 0;
+						for (int b2	= b + 1; b2 < nr_buttons; b2++)
+							matrix[o_p][b2] = factor * matrix[o_p][b2] - o_factor * matrix[p][b2];
+						jolting[o_p] = factor * jolting[o_p] - o_factor * jolting[p];
+					}
+				
+				
+				for (int p = 0; p < nr_pos; p++)
+				{
+					for (int b = 0; b < nr_buttons; b++)
+						if (matrix[p][b] == 0)
+							printf("    ");
+						else
+							printf("%4lld", matrix[p][b]);
+					printf(" = %lld\n", jolting[p]);
+				}
+				printf("\n");
+			}
+			else
+				reduced_on_pos[b] = -1;
+		}
+		min = 1000;
+		solve_equations(0, nr_buttons - 1);
+		printf("min = %d\n", min);
+	}
+}
+
+void solve_equations(int jolt, int button)
+{
+	if (button < 0)
+	{
+		if (jolt < min)
+		{
+			min = jolt;
+		}
+		return;
+	}
+	if (jolt >= min)
+		return;
+	
+	int pos = reduced_on_pos[button];
+	if (pos >= 0)
+	{
+		num_t value = jolting[pos];
+		for (int b = button + 1; b < nr_buttons; b++)
+			value -= matrix[pos][b] * button_presses[b];
+		num_t factor = matrix[pos][button];
+		printf("%*.*sValue = %lld, factor = %lld\n", depth, depth, "", value, factor);
+		if (factor < 0)
+		{
+			factor = -factor;
+			value = -value;
+		}
+		if (value < 0)
+			return;
+		if (factor > 1)
+		{
+			if (value % factor != 0)
+				return;
+			value /= factor;
+		}
+		jolt += value;
+		if (jolt < min)
+		{
+			button_presses[button] = value;
+			printf("%*.*sFor pos %d use %lld, jolt = %d\n", depth, depth, "", button, button_presses[button], jolt);
+			depth++;
+			solve_equations(jolt, button - 1);
+			depth--;
+		} 
+	}
+	else
+	{
+		button_presses[button] = 0;
+		while (jolt < min)
+		{
+			printf("%*.*sFor pos %d try %lld, jolt = %d\n", depth, depth, "", button, button_presses[button], jolt);
+			depth++;
+			solve_equations(jolt, button - 1);
+			depth--;
+			button_presses[button]++;
+			jolt++;
+		}
+	}
+}
+
+```
+
+At 21:04, this returns a reasonable answer. I had to add some print statements
+for debugging in order to discover I mixed up 'position' and 'button' indices at some
+places in the function `solve_equations`.
+
+Lets try it for all machines.
+
+```c
+void solve2()
+{
+	num_t count = 0;
+	for (int i = 0; i < n; i++)
+	{
+		char *s = d[i];
+		while (*s != '(')
+			s++;
+		nr_pos = (s - d[i]) - 3;
+
+		nr_buttons = 0;
+		while (*s == '(')
+		{
+			for (int p = 0; p < nr_pos; p++)
+				matrix[p][nr_buttons] = 0;
+			s++;
+			buttons[nr_buttons] = 0;
+			for (;;)
+			{
+				num_t num = parse_number(&s);
+				matrix[num][nr_buttons] = 1;
+				if (*s++ == ')')
+					break;
+			}
+			s++;
+			nr_buttons++;
+		}
+		for (int j = 0; *s != '}'; j++)
+		{
+			s++;
+			jolting[j] = parse_number(&s);
+		}
+		
+		for (int p = 0; p < nr_pos; p++)
+		{
+			for (int b = 0; b < nr_buttons; b++)
+				if (matrix[p][b] == 0)
+					printf("    ");
+				else
+					printf("%4lld", matrix[p][b]);
+			printf(" = %lld\n", jolting[p]);
+		}
+		printf("\n");
+		
+		// reduce:
+		bool reduced_rows[50];
+		for (int p = 0; p < nr_pos; p++)
+			reduced_rows[p] = FALSE;
+		
+		for (int b = 0; b < nr_buttons; b++)
+		{
+			// find row
+			int p = 0;
+			for (p = 0; p < nr_pos; p++)
+				if (!reduced_rows[p] && matrix[p][b] != 0)
+					break;
+			if (p < nr_pos)
+			{
+				reduced_on_pos[b] = p;
+				reduced_rows[p] = TRUE;
+
+				num_t factor = matrix[p][b];
+				printf("%d: %lld\n", p, factor);
+				
+				for (int o_p = 0; o_p < nr_pos; o_p++)
+					if (!reduced_rows[o_p] && matrix[o_p][b] != 0)
+					{
+						num_t o_factor = matrix[o_p][b];
+						matrix[o_p][b] = 0;
+						for (int b2	= b + 1; b2 < nr_buttons; b2++)
+							matrix[o_p][b2] = factor * matrix[o_p][b2] - o_factor * matrix[p][b2];			
+						jolting[o_p] = factor * jolting[o_p] - o_factor * jolting[p];
+					}
+				
+				
+				for (int p = 0; p < nr_pos; p++)
+				{
+					for (int b = 0; b < nr_buttons; b++)
+						if (matrix[p][b] == 0)
+							printf("    ");
+						else
+							printf("%4lld", matrix[p][b]);
+					printf(" = %lld\n", jolting[p]);
+				}
+				printf("\n");
+			}
+			else
+				reduced_on_pos[b] = -1;
+		}
+		min = 1000;
+		solve_equations(0, nr_buttons - 1);
+		printf("min = %d\n", min);
+		count += min;
+	}
+	printf("%lld\n", count);
+}
+
+void solve_equations(int jolt, int button)
+{
+	if (button < 0)
+	{
+		if (jolt < min)
+		{
+			min = jolt;
+		}
+		return;
+	}
+	if (jolt >= min)
+		return;
+	
+	int pos = reduced_on_pos[button];
+	if (pos >= 0)
+	{
+		num_t value = jolting[pos];
+		for (int b = button + 1; b < nr_buttons; b++)
+			value -= matrix[pos][b] * button_presses[b];
+		num_t factor = matrix[pos][button];
+		//printf("%*.*sValue = %lld, factor = %lld\n", depth, depth, "", value, factor);
+		if (factor < 0)
+		{
+			factor = -factor;
+			value = -value;
+		}
+		if (value < 0)
+			return;
+		if (factor > 1)
+		{
+			if (value % factor != 0)
+				return;
+			value /= factor;
+		}
+		jolt += value;
+		if (jolt < min)
+		{
+			button_presses[button] = value;
+			//printf("%*.*sFor pos %d use %lld, jolt = %d\n", depth, depth, "", button, button_presses[button], jolt);
+			depth++;
+			solve_equations(jolt, button - 1);
+			depth--;
+		} 
+	}
+	else
+	{
+		button_presses[button] = 0;
+		while (jolt < min)
+		{
+			//printf("%*.*sFor pos %d try %lld, jolt = %d\n", depth, depth, "", button, button_presses[button], jolt);
+			depth++;
+			solve_equations(jolt, button - 1);
+			depth--;
+			button_presses[button]++;
+			jolt++;
+		}
+	}
+}
+
+```
+
+At 21:10, that did return the correct answer, after commenting out the
+print statements in the function `solve_equations`. That was 39 hours and 10 minutes after
+the puzzle was published. The program requirs about 0.3 seconds to run.
+
 
 ### Executing this page
 

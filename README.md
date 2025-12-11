@@ -125,6 +125,12 @@ usual syntax errors and small bugs (maybe due to have had too less sleep).
 
 See further [Day 11](Day11.md) and [day11.c](day11.c).
 
+In the evening, I also solved the second part of yesterday without any
+external help. Looking at the [Stats](https://adventofcode.com/2025/stats) page,
+it has the lowest number of Gold stars for all the puzzles of this year, from
+which one could conclude that this is the hardest puzzle so far.
+
+
 ### Personal stats
 
 The columns 'Gold' and 'Silver' contain the numbers from the [Stats](https://adventofcode.com/2025/stats)
@@ -141,7 +147,7 @@ Day   -Part 1-   -Part 2-   -Gold-  -Silver-
   7   00:17:28   00:34:48     2305      2486
   8   00:50:24   00:56:07     2737       599
   9   00:20:37   02:04:15     2638      8733
- 10   00:21:57          -
+ 10   00:21:57   39:10       12721     13579
  11   00:36:31   00:49:03     2143      2503
 ```
  
