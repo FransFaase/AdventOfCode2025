@@ -107,6 +107,9 @@ void solve1()
 }
 ```
 
+At 6:21:57, I submitted the correct answer for my puzzle input with the above program.
+The code simply tries all combinations.
+
 ### Second part of the puzzle.
 
 ```c
@@ -1410,7 +1413,7 @@ Now, lets repeat this process for some columns:
                           3 -3  1  1  2   195-231-106+231+212-73+191-196+231-2*168
 ```
 
-In the end this will return in some equations with some
+In the end this will result in some equations with some
 free variables.
 
 At 11:46 (on Thursday December 11), lets write some code to reproduce this:

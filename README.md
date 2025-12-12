@@ -130,6 +130,14 @@ external help. Looking at the [Stats](https://adventofcode.com/2025/stats) page,
 it has the lowest number of Gold stars for all the puzzles of this year, from
 which one could conclude that this is the hardest puzzle so far.
 
+### Friday, December 12, 2025
+
+I feel a bit being fooled for todays puzzle. At first it looked like the hardest
+puzzle of all, but in the end it turned out to be one of the easiest, which
+for my input (and I expect everybodies) could be solved with some simple
+counting. Most of the code that I wrote was not needed at all.
+
+See further [Day 12](Day12.md) and [day12.c](day12.c).
 
 ### Personal stats
 
@@ -149,5 +157,7 @@ Day   -Part 1-   -Part 2-   -Gold-  -Silver-
   9   00:20:37   02:04:15     2638      8733
  10   00:21:57   39:10       12721     13579
  11   00:36:31   00:49:03     2143      2503
+ 12   00:56:39   00:57:25     1585       247
+
 ```
  
