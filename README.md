@@ -132,7 +132,7 @@ which one could conclude that this is the hardest puzzle so far.
 
 ### Friday, December 12, 2025
 
-I feel a bit being fooled for todays puzzle. At first it looked like the hardest
+I feel a bit getting trolled for todays puzzle. At first it looked like the hardest
 puzzle of all, but in the end it turned out to be one of the easiest, which
 for my input (and I expect everybodies) could be solved with some simple
 counting. Most of the code that I wrote was not needed at all.
