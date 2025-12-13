@@ -38,11 +38,19 @@ typedef char *char_p;
 char **d;
 int n;
 int m;
-bool use_sample =FALSE ;
+#line 385 "Day12.md"
+bool use_sample =TRUE ;
 #line 16 "Day12.md"
 int nr_variants[6];
 char pieces[6][8][3][3];
 int piece_size[6];
+#line 449 "Day12.md"
+int pieces_j[6][8];
+#line 526 "Day12.md"
+int nr_per_piece[6];
+
+int h   ;int    w;
+char region[100][100];
 
 // *** function forward declarations ***
 
@@ -68,12 +76,14 @@ num_t num_t_abs(num_t a);
 int num_t_sign(num_t a);
 #line 153 "Std.md"
 char *copy_str(char *s);
-#line 274 "Day12.md"
+#line 451 "Day12.md"
 void solve1();
-#line 340 "Day12.md"
+#line 531 "Day12.md"
 bool solve_line(int i);
 #line 369 "Day12.md"
 void solve2();
+#line 568 "Day12.md"
+bool find(int i, int j, int left_pieces, int empty);
 
 // *** functions ***
 
@@ -186,7 +196,7 @@ char *copy_str(char *s)
     char *r =( char*)malloc(strlen(s) + 1);
     strcpy(r, s);
     return r;}
-#line 274 "Day12.md"
+#line 451 "Day12.md"
 void solve1()
 {
     for( int p =0;  p < 6; p++)
@@ -199,7 +209,7 @@ void solve1()
         nr_variants[p] = 1;
         for( int f =0;  f < 2; f++)
         {
-#line 289 "Day12.md"
+#line 466 "Day12.md"
             for( int r =0;  r < 4; r++)
             {
                 char h      = piece[0][0];
@@ -240,36 +250,113 @@ void solve1()
             for( int i =0;  i < 3; i++)
                 for( int j =0;  j < 3; j++)
                     if( piece[i][j] == '#')
-                        piece_size[p]++;}}
-#line 333 "Day12.md"
+                        piece_size[p]++;}
+
+        for( int v =0;  v < nr_variants[p]; v++)
+        {
+            for( int j =0;  j < 3; j++)
+                if( pieces[p][v][0][j] == '#')
+                {
+                    pieces_j[p][v] = j;
+                    break;}}}
+#line 519 "Day12.md"
     int nr_fit =0 ;
     for( int i =30;  i < n; i++)
         if( solve_line(i))
             nr_fit++;
     printf("%d\n", nr_fit);}
-
-
+#line 531 "Day12.md"
 bool solve_line(int i)
 {
     char *s = d[i];
-    int w = parse_number(&s);
+    w = parse_number(&s);
     s++;
-    int h = parse_number(&s);
+    h = parse_number(&s);
     s += 2;
     int sum =0 ;
-    int nr_per_piece[6];
+    int nr_pieces =0 ;
     for( int p =0;  p < 6; p++)
     {
         nr_per_piece[p] = parse_number(&s);
         s++;
+        nr_pieces += nr_per_piece[p];
         sum += piece_size[p] * nr_per_piece[p];}
 
     int area = w*  h;
     int empty = area-  sum;
-    printf("%d %d %d\n", area, sum, empty);
-    return empty > 0;}
+    if( empty < 0)
+    {
+
+        return FALSE;}
+
+    if( nr_pieces <= (w / 3) * (h / 3))
+    {
+
+
+        return TRUE;}
+
+
+    printf("%3d: '%s' %d %d %d, %dx%d=%d %d\n", i + 1, d[i], area, sum, empty, w / 3, h / 3, (w / 3) * (h / 3), (w / 3) * (h / 3) - nr_pieces);
+    for( int i =0;  i < h; i++)
+        for( int j =0;  j < w; j++)
+            region[i][j] = '.';
+    return find(0, 0, nr_pieces, empty);}
 #line 369 "Day12.md"
 void solve2()
 {}
+#line 568 "Day12.md"
+bool find(int i, int j, int left_pieces, int empty)
+{
+    if( left_pieces == 0)
+    {
+        for( int i1 =0;  i1 < h; i1++)
+        {
+            for( int j1 =0;  j1 < w; j1++)
+                printf("%c", region[i1][j1]);
+            printf("\n");}
+
+        return TRUE;}
+#line 582 "Day12.md"
+    for(;;)
+    {
+        if( region[i][j] == '.')
+            break;
+        if( ++j >= w)
+        {
+            j = 0;
+            if( ++i >= h)
+                return FALSE;}}
+#line 594 "Day12.md"
+    for( int p =0;  p < 6; p++)
+        if( nr_per_piece[p] > 0)
+        {
+            for( int v =0;  v < nr_variants[p]; v++)
+            {
+                int i1 =i ;
+                int j1 = j-  pieces_j[p][v];
+                if( 0 <= i1 && i1 + 2 < h && 0 <= j1 && j1 + 2 < w)
+                {
+                    bool fits =TRUE ;
+                    for( int i2 =0;  i2 < 3 && fits; i2++)
+                        for( int j2 =0;  j2 < 3 && fits; j2++)
+                            fits = pieces[p][v][i2][j2] == '.' || region[i1 + i2][j1 + j2] == '.';
+                    if( fits)
+                    {
+                        nr_per_piece[p]--;
+                        for( int i2 =0;  i2 < 3; i2++)
+                            for( int j2 =0;  j2 < 3; j2++)
+                                if( pieces[p][v][i2][j2] == '#')
+                                    region[i1 + i2][j1 + j2] = 'a' + left_pieces % 26;
+                        if( find(i, j, left_pieces - 1, empty))
+                            return TRUE;
+                        nr_per_piece[p]++;
+                        for( int i2 =0;  i2 < 3; i2++)
+                            for( int j2 =0;  j2 < 3; j2++)
+                                if( pieces[p][v][i2][j2] == '#')
+                                    region[i1 + i2][j1 + j2] = '.';}}}}
+#line 625 "Day12.md"
+    if( empty > 0)
+        return find(i + 1, j, left_pieces, empty - 1);
+    return FALSE;}
 
 // *** others ***
