@@ -139,6 +139,12 @@ counting. Most of the code that I wrote was not needed at all.
 
 See further [Day 12](Day12.md) and [day12.c](day12.c).
 
+### Saturday, December 13, 2025
+
+I worked a bit on implementing an algorithm for yesterdays puzzle but than with
+a bit more difficult input, as suggested by the reddit post: [\[2025 Day 12 (Part 3)\] Page two of the list!](https://www.reddit.com/r/adventofcode/comments/1pkl4gb/2025_day_12_part_3_page_two_of_the_list/).
+The immplementation can be found on yesterdays page starting with the section [Extra](https://github.com/FransFaase/AdventOfCode2025/blob/main/Day12.md#extra).
+
 ### Personal stats
 
 The columns 'Gold' and 'Silver' contain the numbers from the [Stats](https://adventofcode.com/2025/stats)
